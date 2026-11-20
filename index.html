@@ -324,7 +324,7 @@ el("rsvp").onsubmit=e=>{
   if (token && !/^[a-f0-9]{32}$/.test(token)) { fail(); return; }
   start(Object.assign({}, base, {name: "", max: 4, token: token, preview: !token}));
   if (!token) return;
-  fetch(window.__API + "?api=guest&invite=" + token)
+  fetch(window.__API + "?api=guest&invite=" + token + (params.get("preview") === "1" ? "&preview=1" : ""))
     .then(function (r) { return r.json(); })
     .then(function (j) { if (!j || !j.ok) { fail(); return; } hydrate(j.guest); })
     .catch(function () {});
