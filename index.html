@@ -94,7 +94,7 @@ window.google = {script: {run: (function make(ok, bad) {
 <script type="text/plain" id="app-main">
 const config = window.__INVITE;
 const el=id=>document.getElementById(id);
-const film=el("video");film.preload="auto";film.addEventListener("playing",function(){setTimeout(function(){document.body.classList.add("flat");},1300);});if(el("replay"))el("replay").addEventListener("click",function(){document.body.classList.remove("flat","turning");},true);film.src=config.video;
+const film=el("video");film.preload="auto";film.addEventListener("playing",function(){if(window.__priming)return;setTimeout(function(){document.body.classList.add("flat");},1300);});if(el("replay"))el("replay").addEventListener("click",function(){document.body.classList.remove("flat","turning");},true);function primeFilm(){try{window.__priming=true;film.muted=false;var p=film.play();if(p&&p.then){p.then(function(){film.pause();film.currentTime=0;window.__priming=false;}).catch(function(){window.__priming=false;});}else{film.pause();window.__priming=false;}}catch(e){window.__priming=false;}}if(el("open"))el("open").addEventListener("click",primeFilm,true);if(el("replay"))el("replay").addEventListener("click",primeFilm,true);film.src=config.video;
 film.poster="poster.jpg";
 const guestName=String(config.name||'').trim().replace(/^the\s+/i,'');
 el('greeting').textContent=guestName?'Dear '+guestName+',':'You’re invited';
