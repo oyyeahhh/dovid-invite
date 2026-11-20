@@ -22,7 +22,7 @@ body.details-theme{background:var(--paper);color:var(--ink);color-scheme:light}#
 
 :root{--envelope:url("envelope.webp");--wax:url("wax.webp")}
 .paper{container-type:inline-size}.greeting{font-size:clamp(14px,10cqi,31px)}
-</style><meta name="robots" content="noindex,nofollow"><link rel="icon" href="brass-logo.png"><style>.greeting-logo{display:block;width:min(50%,150px);height:auto;margin:0 auto 22px;filter:drop-shadow(0 2px 3px #58411e33)}.rsvp-by{margin-top:10px;font-size:13px;color:#8b6a3e;font-style:italic}.credit{margin:22px 0 0;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a08f80}#video{transform:translateZ(0);-webkit-transform:translateZ(0)}.paper-back::before,.paper-back::after{content:none!important;display:none!important}.flat #stage{perspective:none!important}.flat .paper,.flat .paper-turn{transform-style:flat!important}.flat .paper-turn{transform:none!important}.flat .paper-front{display:none!important}.flat .paper-back{transform:none!important;box-shadow:none!important}.turning .paper-front>*,.turning #open-caption{opacity:0!important;transition:opacity .22s ease}body.details-theme{background-color:#F3EBDD;background-image:radial-gradient(ellipse at 30% 40%,#fffaf2cc 0%,#fffaf200 60%),repeating-linear-gradient(0deg,#00000008 0 1px,#0000 1px 3px),repeating-linear-gradient(90deg,#00000007 0 1px,#0000 1px 3px),url(linen-grain.png)}.reply h2{text-wrap:balance}#loading{position:fixed;left:0;right:0;bottom:18px;text-align:center;font:500 12px Manrope,sans-serif;letter-spacing:.12em;color:#c9bbbd;opacity:.8}</style></head><body><main><section id="experience" aria-label="Your personal invitation">
+</style><meta name="robots" content="noindex,nofollow"><link rel="icon" href="brass-logo.png"><style>.greeting-logo{display:block;width:min(50%,150px);height:auto;margin:0 auto 22px;filter:drop-shadow(0 2px 3px #58411e33)}.rsvp-by{margin-top:10px;font-size:13px;color:#8b6a3e;font-style:italic}.credit{margin:22px 0 0;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a08f80}#video{transform:translateZ(0);-webkit-transform:translateZ(0)}.paper-back::before,.paper-back::after{content:none!important;display:none!important}.flat #stage{perspective:none!important}.flat .paper,.flat .paper-turn{transform-style:flat!important}.flat .paper-turn{transform:none!important}.flat .paper-front{display:none!important}.flat .paper-back{transform:none!important;box-shadow:none!important}.turning .paper-front>*,.turning #open-caption{opacity:0!important;transition:opacity .22s ease}body.details-theme{background-color:#F3EBDD;background-image:radial-gradient(ellipse at 30% 40%,#fffaf2cc 0%,#fffaf200 60%),repeating-linear-gradient(0deg,#00000008 0 1px,#0000 1px 3px),repeating-linear-gradient(90deg,#00000007 0 1px,#0000 1px 3px),url(linen-grain.png)}.reply h2{text-wrap:balance}#sound.needs-sound{background:#c3a679;color:#241b26;padding:7px 14px;border-radius:999px;font-weight:600;animation:soundpulse 1.6s ease-in-out infinite}@keyframes soundpulse{0%,100%{box-shadow:0 0 0 0 #c3a67999}50%{box-shadow:0 0 0 10px #c3a67900}}#loading{position:fixed;left:0;right:0;bottom:18px;text-align:center;font:500 12px Manrope,sans-serif;letter-spacing:.12em;color:#c9bbbd;opacity:.8}</style></head><body><main><section id="experience" aria-label="Your personal invitation">
 <header class="scene-heading" id="scene-heading"><p class="eyebrow">You’re invited</p><h1>Dovid Nadler</h1><p class="occasion">A Bar Mitzvah celebration</p></header>
 <div id="stage">
  <div class="env-layer env-back" aria-hidden="true"></div>
@@ -94,7 +94,7 @@ window.google = {script: {run: (function make(ok, bad) {
 <script type="text/plain" id="app-main">
 const config = window.__INVITE;
 const el=id=>document.getElementById(id);
-const film=el("video");film.preload="auto";film.addEventListener("playing",function(){if(window.__priming)return;setTimeout(function(){document.body.classList.add("flat");},1300);});if(el("replay"))el("replay").addEventListener("click",function(){document.body.classList.remove("flat","turning");},true);function primeFilm(){try{window.__priming=true;film.muted=false;var p=film.play();if(p&&p.then){p.then(function(){film.pause();film.currentTime=0;window.__priming=false;}).catch(function(){window.__priming=false;});}else{film.pause();window.__priming=false;}}catch(e){window.__priming=false;}}if(el("open"))el("open").addEventListener("click",primeFilm,true);if(el("replay"))el("replay").addEventListener("click",primeFilm,true);film.src=config.video;
+const film=el("video");film.preload="auto";film.addEventListener("playing",function(){if(window.__priming)return;setTimeout(function(){document.body.classList.add("flat");},1300);});if(el("replay"))el("replay").addEventListener("click",function(){document.body.classList.remove("flat","turning");},true);function primeFilm(){try{window.__priming=true;film.muted=(typeof sound!=="undefined")?!sound:false;var p=film.play();if(p&&p.then){p.then(function(){film.pause();film.currentTime=0;window.__priming=false;}).catch(function(){window.__priming=false;});}else{film.pause();window.__priming=false;}}catch(e){window.__priming=false;}}if(el("open"))el("open").addEventListener("click",primeFilm,true);if(el("replay"))el("replay").addEventListener("click",primeFilm,true);film.src=config.video;
 film.poster="poster.jpg";
 const guestName=String(config.name||'').trim().replace(/^the\s+/i,'');
 el('greeting').textContent=guestName?'Dear '+guestName+',':'You’re invited';
@@ -286,6 +286,21 @@ el("rsvp").onsubmit=e=>{
       .saveRsvp(config.token, "Yes", Number(document.getElementById("count").value) || 1, box.checked);
   });
 })();
+</script><script type="text/plain" id="auto-start">
+(function () {
+  var touched = false;
+  el("open").addEventListener("click", function (e) { if (e.isTrusted) touched = true; }, true);
+  setTimeout(function () {
+    if (touched || state !== "sealed") return;
+    sound = false; soundUI();
+    var b = el("sound"); b.classList.add("needs-sound");
+    var baseUI = soundUI;
+    soundUI = function () { baseUI(); if (!sound && b.classList.contains("needs-sound")) b.textContent = "Tap for sound"; };
+    soundUI();
+    b.addEventListener("click", function () { b.classList.remove("needs-sound"); soundUI(); }, {capture: true, once: true});
+    el("open").click();
+  }, 1100);
+})();
 </script>
 <script>
 (function () {
@@ -300,6 +315,7 @@ el("rsvp").onsubmit=e=>{
     note.remove();
     var a = document.createElement("script"); a.textContent = document.getElementById("app-main").textContent; document.body.appendChild(a);
     var b = document.createElement("script"); b.textContent = document.getElementById("waiver-step").textContent; document.body.appendChild(b);
+    var c = document.createElement("script"); c.textContent = document.getElementById("auto-start").textContent; document.body.appendChild(c);
   }
   function fail() {
     document.body.innerHTML = '<main style="min-height:100vh;display:grid;place-items:center;background:#241b26;color:#f3eadb;font-family:Manrope,sans-serif;text-align:center;padding:24px"><div><h1 style="font:400 34px \'DM Serif Display\',serif;margin:0 0 12px">Invitation link unavailable</h1><p style="opacity:.8">Please use the personal link from your invitation email.</p></div></main>';
