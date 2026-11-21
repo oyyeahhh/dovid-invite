@@ -90,6 +90,24 @@ window.google = {script: {run: (function make(ok, bad) {
 #after label{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.5;color:#16233d;cursor:pointer}
 #after label input{margin-top:3px}
 #after .wsaved{font-size:12px;color:#8b6a3e;margin:8px 0 0;min-height:1em}
+
+#rsvp-pop{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:20px;background:rgba(10,17,30,.62);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;transition:opacity .25s}
+#rsvp-pop.on{opacity:1}
+#rsvp-pop[hidden]{display:none}
+#rsvp-pop .card{position:relative;width:min(420px,100%);background:#f9f0e3;color:#16233d;text-align:center;padding:34px 26px 26px;border:1px solid #c7ae7a;box-shadow:0 0 0 6px #f9f0e3,0 0 0 7px #c7ae7a88,0 24px 60px rgba(0,0,0,.45);transform:translateY(14px) scale(.97);transition:transform .3s cubic-bezier(.2,.8,.2,1);overflow:hidden}
+#rsvp-pop.on .card{transform:none}
+#rsvp-pop .logo{width:62px;height:auto;display:block;margin:0 auto 14px}
+#rsvp-pop h2{font:700 22px/1.25 Cinzel,Georgia,serif;letter-spacing:.04em;margin:0 0 12px;color:#16233d}
+#rsvp-pop p{font-size:14.5px;line-height:1.6;margin:0 0 12px;color:#3c4a63}
+#rsvp-pop .step{border-top:1px solid #c7ae7a88;padding-top:14px;margin-top:16px}
+#rsvp-pop .step b{color:#16233d;letter-spacing:.08em;text-transform:uppercase;font-size:11.5px;display:block;margin-bottom:4px}
+#rsvp-pop .main{display:block;width:100%;box-sizing:border-box;background:#16233d;color:#f9f0e3;text-decoration:none;padding:15px 18px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin:16px 0 10px;border:0;cursor:pointer}
+#rsvp-pop .main:hover{background:#22365a}
+#rsvp-pop .sec{display:inline-block;color:#16233d;font-size:13px;text-decoration:underline;text-underline-offset:3px;text-decoration-color:#c7ae7a;margin:4px 10px;background:none;border:0;cursor:pointer;font-family:inherit}
+#rsvp-pop .x{position:absolute;top:8px;right:10px;background:none;border:0;font-size:26px;line-height:1;color:#7d8699;cursor:pointer;padding:6px}
+#rsvp-pop .bit{position:absolute;top:-12px;width:7px;height:12px;background:#c7ae7a;opacity:.9;animation:rpfall 2.4s ease-in forwards}
+@keyframes rpfall{to{transform:translateY(560px) rotate(540deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){#rsvp-pop,#rsvp-pop .card{transition:none}#rsvp-pop .bit{display:none}}
 </style>
 <script type="text/plain" id="app-main">
 const config = window.__INVITE;
@@ -287,6 +305,64 @@ el("rsvp").onsubmit=e=>{
       .withFailureHandler(function () { note.textContent = "Couldn’t save that. Please try again."; })
       .saveRsvp(config.token, "Yes", Number(document.getElementById("count").value) || 1, box.checked);
   });
+})();
+
+(function () {
+  var status = document.getElementById("status");
+  var form = document.getElementById("rsvp");
+  if (!status || !form) return;
+  var answered = !!(typeof config !== "undefined" && config.previous && config.previous.answer);
+  var pop = document.createElement("div");
+  pop.id = "rsvp-pop"; pop.hidden = true;
+  pop.setAttribute("role", "dialog"); pop.setAttribute("aria-modal", "true"); pop.setAttribute("aria-labelledby", "rp-title");
+  document.body.appendChild(pop);
+  function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  function close(){ pop.classList.remove("on"); setTimeout(function(){ pop.hidden = true; pop.innerHTML = ""; }, 250); }
+  function confetti(card){
+    for (var i = 0; i < 26; i++) { var b = document.createElement("i"); b.className = "bit";
+      b.style.left = (Math.random()*100) + "%"; b.style.animationDelay = (Math.random()*0.6) + "s";
+      b.style.background = ["#c7ae7a","#e2cc9a","#16233d","#a8884d"][i%4]; b.style.transform = "rotate(" + (Math.random()*90) + "deg)";
+      card.appendChild(b); }
+  }
+  function open(yes, count, updated){
+    var waiver = document.querySelector("#after a");
+    var apple = /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
+    var cal = document.getElementById(apple ? "ics" : "calendar");
+    var h = '<div class="card"><button class="x" aria-label="Close">×</button><img class="logo" src="brass-logo.png" alt="">';
+    if (updated) h += '<p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8a7044;margin:0 0 8px">Got it · we’ve updated your RSVP</p>';
+    if (yes) {
+      h += '<h2 id="rp-title">We can’t wait to celebrate with you!</h2>' +
+        '<p>We’ve saved your RSVP for <strong>' + count + ' guest' + (count === 1 ? '' : 's') + '</strong>.</p>' +
+        '<div class="step"><b>One last step</b><p style="margin:0">Please fill out the Power Up Arena waiver so you’re all set to play when you arrive.</p></div>' +
+        '<a class="main" id="rp-waiver" target="_blank" rel="noopener" href="' + esc(waiver ? waiver.href : "#") + '">Sign the waiver ↗</a>' +
+        (cal && cal.href ? '<a class="sec" id="rp-cal" ' + (apple ? 'download="Dovid-Bar-Mitzvah.ics"' : 'target="_blank" rel="noopener"') + ' href="' + esc(cal.href) + '">Add to calendar</a>' : '') +
+        '<button class="sec" id="rp-later">I’ll do it later</button>';
+    } else {
+      h += '<h2 id="rp-title">We’ll miss you!</h2>' +
+        '<p>Thank you for letting us know. We’ll be thinking of you on Dovid’s big night.</p>' +
+        '<p style="font-size:12.5px;color:#6b7488">If your plans change, you can come back to this link and update your reply by Sunday, December 20.</p>' +
+        '<button class="main" id="rp-close">Close</button>';
+    }
+    pop.innerHTML = h + '</div>';
+    pop.hidden = false; requestAnimationFrame(function(){ pop.classList.add("on"); });
+    var card = pop.querySelector(".card");
+    if (yes && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) confetti(card);
+    pop.querySelector(".x").onclick = close;
+    var c = pop.querySelector("#rp-close"); if (c) c.onclick = close;
+    var l = pop.querySelector("#rp-later"); if (l) l.onclick = close;
+    var w = pop.querySelector("#rp-waiver"); if (w) w.addEventListener("click", function(){ setTimeout(close, 300); });
+    var m = pop.querySelector(".main"); if (m) m.focus();
+  }
+  pop.addEventListener("click", function (e) { if (e.target === pop) close(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !pop.hidden) close(); });
+  var last = "";
+  new MutationObserver(function () {
+    var t = status.textContent || "";
+    if (t === last) return; last = t;
+    var r = form.querySelector("input[name=answer]:checked"); var a = r ? r.value : "";
+    if (/^Thank you\./.test(t) && a === "Yes") { open(true, Number(document.getElementById("count").value) || 1, answered); answered = true; }
+    else if (/^Thanks for letting us know/.test(t) && a === "No") { open(false, 0, answered); answered = true; }
+  }).observe(status, { childList: true, characterData: true, subtree: true });
 })();
 </script><script type="text/plain" id="auto-start">
 (function () {
