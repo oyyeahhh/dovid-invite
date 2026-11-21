@@ -208,8 +208,8 @@ async function reveal(){
  document.body.classList.add('details-theme');el('details').hidden=false;
  window.scrollTo({top:0,behavior:'instant'});
  animate(el('invitation-art'),[{opacity:0,transform:'translateY(14px)'},{opacity:1,transform:'translateY(0)'}],800);
- // Dovid's photo fades away after 10 seconds on screen.
- clearTimeout(window.__kidTimer);const kid=document.querySelector('.kid');if(kid){kid.classList.remove('gone');window.__kidTimer=setTimeout(()=>kid.classList.add('gone'),10000);}
+ // Dovid's photo fades away after 5 seconds on screen.
+ clearTimeout(window.__kidTimer);const kid=document.querySelector('.kid');if(kid){kid.classList.remove('gone');window.__kidTimer=setTimeout(()=>kid.classList.add('gone'),5000);}
  animate(el('reply'),[{opacity:0,transform:'translateY(18px)'},{opacity:1,transform:'translateY(0)'}],1000);
  el('details-title').focus({preventScroll:true});
 }
